@@ -221,7 +221,7 @@ func listImages(c *cli.Context) error {
 	}
 	if sortBySize {
 		sort.Slice(allImageInfos, func(i, j int) bool {
-			return allImageInfos[i].Size < allImageInfos[j].Size
+			return allImageInfos[i].Size > allImageInfos[j].Size
 		})
 		for _, imageInfo := range allImageInfos {
 			imageTotalSizeWithHumanReadable := getBytesAsHumanReadable(imageInfo.Size)
