@@ -159,7 +159,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 202 {
-		return errors.New(fmt.Sprintf("HTTP Code: %d", resp.StatusCode))
+		return errors.New(fmt.Sprintf("HTTP Code: %d, Image: '%s:%s'", image, tag, resp.StatusCode))
 	}
 
 	fmt.Printf("'%s:%s' has been successful deleted\n", image, tag)
