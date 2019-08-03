@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/BurntSushi/toml"
 	"net/http"
 	"os"
+
+	"github.com/BurntSushi/toml"
 )
 
 const ACCEPT_HEADER = "application/vnd.docker.distribution.manifest.v2+json"
@@ -161,7 +162,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 		return errors.New(fmt.Sprintf("HTTP Code: %d", resp.StatusCode))
 	}
 
-	fmt.Printf("%s:%s has been successful deleted\n", image, tag)
+	fmt.Printf("'%s:%s' has been successful deleted\n", image, tag)
 
 	return nil
 }

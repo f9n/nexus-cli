@@ -295,8 +295,13 @@ func deleteImage(c *cli.Context) error {
 		}
 		if tag == "" {
 			if keep == 0 {
-				fmt.Fprintf(c.App.Writer, "You should either specify the tag or how many images you want to keep\n")
-				cli.ShowSubcommandHelp(c)
+				tags, err := r.ListTagsByImage(imgName)
+				if err != nil {
+					return cli.NewExitError(err.Error(), 1)
+				}
+				for _, tag := range tags {
+					r.DeleteImageByTag(imgName, tag)
+				}
 			} else {
 				tags, err := r.ListTagsByImage(imgName)
 				compareStringNumber := func(str1, str2 string) bool {
