@@ -44,6 +44,11 @@ func main() {
 				{
 					Name:  "ls",
 					Usage: "List all images in repository",
+					Flags: []cli.Flag{
+						cli.BoolFlag{
+							Name: "detail",
+						},
+					},
 					Action: func(c *cli.Context) error {
 						return listImages(c)
 					},
@@ -159,6 +164,7 @@ func setNexusCredentials(c *cli.Context) error {
 }
 
 func listImages(c *cli.Context) error {
+	var isDetail = c.Bool("detail")
 	r, err := registry.NewRegistry()
 	if err != nil {
 		return cli.NewExitError(err.Error(), 1)
@@ -168,6 +174,13 @@ func listImages(c *cli.Context) error {
 		return cli.NewExitError(err.Error(), 1)
 	}
 	for _, image := range images {
+		if isDetail {
+			imageTotalSize, err := getTotalImageSizeWithHumanReadable(image)
+			if err != nil {
+				fmt.Printf("<%s> ", err.Error())
+			}
+			fmt.Printf("%s ", imageTotalSize)
+		}
 		fmt.Println(image)
 	}
 	fmt.Printf("Total images: %d\n", len(images))
@@ -267,43 +280,66 @@ func deleteImage(c *cli.Context) error {
 	return nil
 }
 
+func getTotalImageSize(imageName string) (int64, error) {
+	var totalSize int64
+	r, err := registry.NewRegistry()
+	if err != nil {
+		return 0, err
+	}
+
+	tags, err := r.ListTagsByImage(imageName)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, tag := range tags {
+		manifest, err := r.ImageManifest(imageName, tag)
+		if err != nil {
+			return 0, err
+		}
+
+		sizeInfo := make(map[string]int64)
+
+		for _, layer := range manifest.Layers {
+			sizeInfo[layer.Digest] = layer.Size
+		}
+
+		for _, size := range sizeInfo {
+			totalSize += size
+		}
+	}
+
+	return totalSize, nil
+}
+
+func getTotalImageSizeWithHumanReadable(imageName string) (string, error) {
+	totalSize, err := getTotalImageSize(imageName)
+	if err != nil {
+		return "", err
+	}
+	humanReadableSize := getBytesAsHumanReadable(totalSize)
+	return humanReadableSize, nil
+}
+
+func getBytesAsHumanReadable(totalSize int64) string {
+	humanReadableSize := bytesize.New(float64(totalSize))
+	return humanReadableSize.String()
+}
+
 func showTotalImageSize(c *cli.Context) error {
 	var imgName = c.String("name")
 	var isHumanReadable = c.Bool("human-readable")
-	var totalSize (int64) = 0
 
 	if imgName == "" {
 		cli.ShowSubcommandHelp(c)
 	} else {
-		r, err := registry.NewRegistry()
+		totalSize, err := getTotalImageSize(imgName)
 		if err != nil {
-			return cli.NewExitError(err.Error(), 1)
-		}
-
-		tags, err := r.ListTagsByImage(imgName)
-		if err != nil {
-			return cli.NewExitError(err.Error(), 1)
-		}
-
-		for _, tag := range tags {
-			manifest, err := r.ImageManifest(imgName, tag)
-			if err != nil {
-				return cli.NewExitError(err.Error(), 1)
-			}
-
-			sizeInfo := make(map[string]int64)
-
-			for _, layer := range manifest.Layers {
-				sizeInfo[layer.Digest] = layer.Size
-			}
-
-			for _, size := range sizeInfo {
-				totalSize += size
-			}
+			cli.NewExitError(err, 1)
 		}
 		if isHumanReadable {
-			humanReadableSize := bytesize.New(float64(totalSize))
-			fmt.Printf("%s %s\n", humanReadableSize.String(), imgName)
+			humanReadableSize := getBytesAsHumanReadable(totalSize)
+			fmt.Printf("%s %s\n", humanReadableSize, imgName)
 		} else {
 			fmt.Printf("%d %s\n", totalSize, imgName)
 		}
