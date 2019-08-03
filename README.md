@@ -16,39 +16,37 @@ Nexus CLI for Docker Registry
 
 To install the library and command line program, use the following:
 
-```
-go get -u github.com/f9n/nexus-cli
+```bash
+$ go get -u github.com/f9n/nexus-cli
 ```
 
 ## Available Commands
 
-```
+```bash
 $ nexus-cli configure
 ```
 
-```
+```bash
 $ nexus-cli image ls
 $ nexus-cli image ls --detail
 $ nexus-cli image ls --sort-by-size
 ```
 
-```
+```bash
 $ nexus-cli image tags -name mlabouardy/nginx
 ```
 
-```
+```bash
 $ nexus-cli image info -name mlabouardy/nginx -tag 1.2.0
 ```
 
-```
+```bash
+$ nexus-cli image delete -name mlabouardy/nginx
 $ nexus-cli image delete -name mlabouardy/nginx -tag 1.2.0
-```
-
-```
 $ nexus-cli image delete -name mlabouardy/nginx -keep 4
 ```
 
-```
+```bash
 $ nexus-cli image size -name mlabouardy/nginx
 $ nexus-cli image size -name mlabouardy/nginx --human-readable
 ```
