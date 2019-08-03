@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"sort"
 
 	bytesize "github.com/inhies/go-bytesize"
 	"github.com/mlabouardy/nexus-cli/registry"
@@ -22,7 +23,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Nexus CLI"
 	app.Usage = "Manage Docker Private Registry on Nexus"
-	app.Version = "1.0.0-beta"
+	app.Version = "1.1.0"
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Mohamed Labouardy",
@@ -47,6 +48,9 @@ func main() {
 					Flags: []cli.Flag{
 						cli.BoolFlag{
 							Name: "detail",
+						},
+						cli.BoolFlag{
+							Name: "sort-by-size",
 						},
 					},
 					Action: func(c *cli.Context) error {
@@ -163,27 +167,68 @@ func setNexusCredentials(c *cli.Context) error {
 	return nil
 }
 
-func listImages(c *cli.Context) error {
-	var isDetail = c.Bool("detail")
+func getImageNames() ([]string, error) {
 	r, err := registry.NewRegistry()
 	if err != nil {
-		return cli.NewExitError(err.Error(), 1)
+		return []string{}, err
 	}
 	images, err := r.ListImages()
 	if err != nil {
+		return []string{}, err
+	}
+
+	return images, nil
+}
+
+type ImageInfo struct {
+	Name string
+	Size int64
+}
+
+type ImageInfos []ImageInfo
+
+func listImages(c *cli.Context) error {
+	var allImageInfos []ImageInfo
+
+	var detail = c.Bool("detail")
+	var sortBySize = c.Bool("sort-by-size")
+
+	images, err := getImageNames()
+	if err != nil {
 		return cli.NewExitError(err.Error(), 1)
 	}
+
 	for _, image := range images {
-		if isDetail {
-			imageTotalSize, err := getTotalImageSizeWithHumanReadable(image)
-			if err != nil {
-				fmt.Printf("<%s> ", err.Error())
+		if sortBySize {
+			imageTotalSize, err := getTotalImageSize(image)
+			if err == nil {
+				imageInfo := ImageInfo{
+					Name: image,
+					Size: imageTotalSize,
+				}
+				allImageInfos = append(allImageInfos, imageInfo)
 			}
-			fmt.Printf("%s ", imageTotalSize)
+		} else {
+			if detail {
+				imageTotalSize, err := getTotalImageSizeWithHumanReadable(image)
+				if err != nil {
+					fmt.Printf("<%s> ", err.Error())
+				}
+				fmt.Printf("%s ", imageTotalSize)
+			}
+			fmt.Println(image)
 		}
-		fmt.Println(image)
 	}
-	fmt.Printf("Total images: %d\n", len(images))
+	if sortBySize {
+		sort.Slice(allImageInfos, func(i, j int) bool {
+			return allImageInfos[i].Size < allImageInfos[j].Size
+		})
+		for _, imageInfo := range allImageInfos {
+			imageTotalSizeWithHumanReadable := getBytesAsHumanReadable(imageInfo.Size)
+			fmt.Printf("%s %s\n", imageTotalSizeWithHumanReadable, imageInfo.Name)
+		}
+	}
+	fmt.Printf("Total images: %d\n", len(allImageInfos))
 	return nil
 }
 
