@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"os"
 
+	bytesize "github.com/inhies/go-bytesize"
 	"github.com/mlabouardy/nexus-cli/registry"
 	"github.com/urfave/cli"
 )
@@ -99,6 +100,9 @@ func main() {
 					Flags: []cli.Flag{
 						cli.StringFlag{
 							Name: "name, n",
+						},
+						cli.BoolFlag{
+							Name: "human-readable",
 						},
 					},
 					Action: func(c *cli.Context) error {
@@ -265,6 +269,7 @@ func deleteImage(c *cli.Context) error {
 
 func showTotalImageSize(c *cli.Context) error {
 	var imgName = c.String("name")
+	var isHumanReadable = c.Bool("human-readable")
 	var totalSize (int64) = 0
 
 	if imgName == "" {
@@ -296,7 +301,12 @@ func showTotalImageSize(c *cli.Context) error {
 				totalSize += size
 			}
 		}
-		fmt.Printf("%d %s\n", totalSize, imgName)
+		if isHumanReadable {
+			humanReadableSize := bytesize.New(float64(totalSize))
+			fmt.Printf("%s %s\n", humanReadableSize.String(), imgName)
+		} else {
+			fmt.Printf("%d %s\n", totalSize, imgName)
+		}
 	}
 	return nil
 }
