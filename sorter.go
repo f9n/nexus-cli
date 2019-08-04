@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -46,7 +47,7 @@ func extractNumberFromString(str string) (num int) {
 	// If the tag was all non-digits, the strSlice would be empty (e.g., 'latest')
 	// therefore just throw it to the end (1 << 32 is maxint)
 	if len(strSlice) == 0 {
-		return 1 << 32
+		return math.MaxInt32
 	}
 
 	num, err := strconv.Atoi(strings.Join(strSlice, ""))
