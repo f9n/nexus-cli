@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/mlabouardy/nexus-cli.svg?style=svg)](https://circleci.com/gh/mlabouardy/nexus-cli) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![Build Status](https://cloud.drone.io/api/badges/f9n/nexus-cli/status.svg)](https://cloud.drone.io/f9n/nexus-cli) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 <div align="center">
 <img src="docs/pics/logo.png" width="60%"/>
