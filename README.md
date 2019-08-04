@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/mlabouardy/nexus-cli.svg?style=svg)](https://circleci.com/gh/mlabouardy/nexus-cli) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 <div align="center">
-<img src="logo.png" width="60%"/>
+<img src="docs/pics/logo.png" width="60%"/>
 </div>
 
 Nexus CLI for Docker Registry
@@ -9,7 +9,7 @@ Nexus CLI for Docker Registry
 ## Usage
 
 <div align="center">
-<img src="example.png"/>
+<img src="docs/pics/example.png"/>
 </div>
 
 
