@@ -12,6 +12,28 @@ Nexus CLI for Docker Registry
 <img src="example.png"/>
 </div>
 
+
+## Download
+
+### Linux
+
+```bash
+$ wget https://github.com/f9n/nexus-cli/releases/download/v1.1.0/nexus-cli_1.1.0_Linux_x86_64.tar.gz
+$ tar xvfz nexus-cli_1.1.0_Linux_x86_64.tar.gz
+$ mv nexus-cli /usr/local/bin
+$ nexus-cli --version
+```
+
+### Darwin
+
+```bash
+$ export VERSION="1.1.0"
+$ wget https://github.com/f9n/nexus-cli/releases/download/v${VERSION}/nexus-cli_${VERSION}_Darwin_x86_64.tar.gz
+$ tar xvfz nexus-cli_${VERSION}_Darwin_x86_64.tar.gz
+$ mv nexus-cli /usr/local/bin
+$ nexus-cli --version
+```
+
 ## Installation
 
 To install the library and command line program, use the following:
