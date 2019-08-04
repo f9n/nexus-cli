@@ -25,6 +25,16 @@ type strSorter struct {
 	cmp  func(str1, str2 string) bool
 }
 
+func (s *strSorter) Len() int { return len(s.strs) }
+
+func (s *strSorter) Swap(i, j int) { s.strs[i], s.strs[j] = s.strs[j], s.strs[i] }
+
+func (s *strSorter) Less(i, j int) bool { return s.cmp(s.strs[i], s.strs[j]) }
+
+func CompareStringNumber(str1, str2 string) bool {
+	return extractNumberFromString(str1) < extractNumberFromString(str2)
+}
+
 func extractNumberFromString(str string) (num int) {
 	strSlice := make([]string, 0)
 	for _, v := range str {
@@ -45,9 +55,3 @@ func extractNumberFromString(str string) (num int) {
 	}
 	return num
 }
-
-func (s *strSorter) Len() int { return len(s.strs) }
-
-func (s *strSorter) Swap(i, j int) { s.strs[i], s.strs[j] = s.strs[j], s.strs[i] }
-
-func (s *strSorter) Less(i, j int) bool { return s.cmp(s.strs[i], s.strs[j]) }

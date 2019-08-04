@@ -242,15 +242,10 @@ func listTagsByImage(c *cli.Context) error {
 		cli.ShowSubcommandHelp(c)
 	}
 	tags, err := r.ListTagsByImage(imgName)
-
-	compareStringNumber := func(str1, str2 string) bool {
-		return extractNumberFromString(str1) < extractNumberFromString(str2)
-	}
-	Compare(compareStringNumber).Sort(tags)
-
 	if err != nil {
 		return cli.NewExitError(err.Error(), 1)
 	}
+	Compare(CompareStringNumber).Sort(tags)
 	for _, tag := range tags {
 		fmt.Println(tag)
 	}
@@ -304,13 +299,10 @@ func deleteImage(c *cli.Context) error {
 				}
 			} else {
 				tags, err := r.ListTagsByImage(imgName)
-				compareStringNumber := func(str1, str2 string) bool {
-					return extractNumberFromString(str1) < extractNumberFromString(str2)
-				}
-				Compare(compareStringNumber).Sort(tags)
 				if err != nil {
 					return cli.NewExitError(err.Error(), 1)
 				}
+				Compare(CompareStringNumber).Sort(tags)
 				if len(tags) >= keep {
 					for _, tag := range tags[:len(tags)-keep] {
 						fmt.Printf("%s:%s image will be deleted ...\n", imgName, tag)
