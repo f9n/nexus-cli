@@ -6,20 +6,14 @@
 
 Nexus CLI for Docker Registry
 
-## Usage
-
-<div align="center">
-<img src="docs/pics/example.png"/>
-</div>
-
-
 ## Download
 
 ### Linux
 
 ```bash
-$ wget https://github.com/f9n/nexus-cli/releases/download/v1.1.0/nexus-cli_1.1.0_Linux_x86_64.tar.gz
-$ tar xvfz nexus-cli_1.1.0_Linux_x86_64.tar.gz
+$ export VERSION="1.1.0"
+$ wget https://github.com/f9n/nexus-cli/releases/download/v${VERSION}/nexus-cli_${VERSION}_Linux_x86_64.tar.gz
+$ tar xvfz nexus-cli_${VERSION}_Linux_x86_64.tar.gz
 $ mv nexus-cli /usr/local/bin
 $ nexus-cli --version
 ```
@@ -40,6 +34,32 @@ To install the library and command line program, use the following:
 
 ```bash
 $ go get -u github.com/f9n/nexus-cli
+```
+
+## Usage
+
+```bash
+NAME:
+   Nexus CLI - Manage Docker Private Registry on Nexus
+
+USAGE:
+   nexus-cli [global options] command [command options] [arguments...]
+
+VERSION:
+   1.1.0
+
+AUTHOR:
+   Mohamed Labouardy <mohamed@labouardy.com>
+
+COMMANDS:
+     configure  Configure Nexus Credentials
+     image      Manage Docker Images
+     help, h    Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help
+   --version, -v  print the version
+
 ```
 
 ## Available Commands
