@@ -98,6 +98,9 @@ func main() {
 						cli.StringFlag{
 							Name: "keep, k",
 						},
+						cli.BoolFlag{
+							Name: "force, f",
+						},
 					},
 					Action: func(c *cli.Context) error {
 						return deleteImage(c)
@@ -280,6 +283,7 @@ func deleteImage(c *cli.Context) error {
 	var imgName = c.String("name")
 	var tag = c.String("tag")
 	var keep = c.Int("keep")
+	var force = c.Bool("force")
 	if imgName == "" {
 		fmt.Fprintf(c.App.Writer, "You should specify the image name\n")
 		cli.ShowSubcommandHelp(c)
@@ -294,6 +298,16 @@ func deleteImage(c *cli.Context) error {
 				if err != nil {
 					return cli.NewExitError(err.Error(), 1)
 				}
+				if !force {
+					var response string
+					fmt.Print("We will delete all tags of this image. Are you about that? ('yes' or 'no')")
+					fmt.Scan(&response)
+					if response != "yes" {
+						fmt.Println("Okey. We won't delete these.")
+						return nil
+					}
+				}
+
 				for _, tag := range tags {
 					r.DeleteImageByTag(imgName, tag)
 				}
