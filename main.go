@@ -121,6 +121,14 @@ func main() {
 						return showTotalImageSize(c)
 					},
 				},
+				{
+					Name:  "tree",
+					Usage: "List all tags of images and in repository",
+					Flags: []cli.Flag{},
+					Action: func(c *cli.Context) error {
+						return treeOfAllImages(c)
+					},
+				},
 			},
 		},
 	}
@@ -235,16 +243,44 @@ func listImages(c *cli.Context) error {
 	return nil
 }
 
-func listTagsByImage(c *cli.Context) error {
-	var imgName = c.String("name")
-	r, err := registry.NewRegistry()
+func treeOfAllImages(c *cli.Context) error {
+	images, err := getImageNames()
 	if err != nil {
 		return cli.NewExitError(err.Error(), 1)
 	}
+
+	for _, image := range images {
+		fmt.Println(image)
+		tags, err := getTagsByImage(image)
+		if err != nil {
+			fmt.Print("\tError: ")
+			fmt.Println(err)
+		}
+		for _, tag := range tags {
+			fmt.Printf("\t%s\n", tag)
+		}
+	}
+	return nil
+}
+
+func getTagsByImage(imgName string) ([]string, error) {
+	r, err := registry.NewRegistry()
+	if err != nil {
+		return []string{}, err
+	}
+	tags, err := r.ListTagsByImage(imgName)
+	if err != nil {
+		return []string{}, err
+	}
+	return tags, nil
+}
+
+func listTagsByImage(c *cli.Context) error {
+	var imgName = c.String("name")
 	if imgName == "" {
 		cli.ShowSubcommandHelp(c)
 	}
-	tags, err := r.ListTagsByImage(imgName)
+	tags, err := getTagsByImage(imgName)
 	if err != nil {
 		return cli.NewExitError(err.Error(), 1)
 	}
