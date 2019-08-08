@@ -2,11 +2,10 @@ package registry
 
 import (
 	"github.com/f9n/nexus-cli/util"
-	"github.com/mlabouardy/nexus-cli/registry"
 )
 
 func GetImageNames() ([]string, error) {
-	r, err := registry.NewRegistry()
+	r, err := NewRegistry()
 	if err != nil {
 		return []string{}, err
 	}
@@ -19,7 +18,7 @@ func GetImageNames() ([]string, error) {
 }
 
 func GetTagsByImage(imgName string) ([]string, error) {
-	r, err := registry.NewRegistry()
+	r, err := NewRegistry()
 	if err != nil {
 		return []string{}, err
 	}
@@ -32,7 +31,7 @@ func GetTagsByImage(imgName string) ([]string, error) {
 
 func GetTotalImageSize(imageName string) (int64, error) {
 	var totalSize int64
-	r, err := registry.NewRegistry()
+	r, err := NewRegistry()
 	if err != nil {
 		return 0, err
 	}
