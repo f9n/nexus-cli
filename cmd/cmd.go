@@ -144,7 +144,6 @@ func ListTagsByImage(c *cli.Context) error {
 	for _, tag := range tags {
 		fmt.Println(tag)
 	}
-	fmt.Printf("There are %d images for %s\n", len(tags), imgName)
 	return nil
 }
 
