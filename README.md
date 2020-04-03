@@ -11,7 +11,7 @@ Nexus CLI for Docker Registry
 ### Linux
 
 ```bash
-$ export VERSION="1.3.0"
+$ export VERSION="1.3.1"
 $ wget https://github.com/f9n/nexus-cli/releases/download/v${VERSION}/nexus-cli_${VERSION}_Linux_x86_64.tar.gz
 $ tar xvfz nexus-cli_${VERSION}_Linux_x86_64.tar.gz
 $ mv nexus-cli /usr/local/bin
@@ -21,7 +21,7 @@ $ nexus-cli --version
 ### Darwin
 
 ```bash
-$ export VERSION="1.3.0"
+$ export VERSION="1.3.1"
 $ wget https://github.com/f9n/nexus-cli/releases/download/v${VERSION}/nexus-cli_${VERSION}_Darwin_x86_64.tar.gz
 $ tar xvfz nexus-cli_${VERSION}_Darwin_x86_64.tar.gz
 $ mv nexus-cli /usr/local/bin
@@ -46,7 +46,7 @@ USAGE:
    nexus-cli [global options] command [command options] [arguments...]
 
 VERSION:
-   1.3.0
+   1.3.1
 
 AUTHOR:
    Mohamed Labouardy <mohamed@labouardy.com>
